@@ -1,0 +1,2 @@
+Board Manager URL for ATTinyCore (see https://github.com/SpenceKonde/ATTinyCore):
+http://drazzy.com/package_drazzy.com_index.json
