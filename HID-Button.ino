@@ -1,8 +1,8 @@
-//---------------------------------//
-//         HID-Button V1.0         //
-//    (c) Alexander Feuster 2024   //
-//  http://www.github.com/feuster  //
-//---------------------------------//
+//--------------------------------------------//
+//              HID-Button V1.0               //
+//         (c) Alexander Feuster 2024         //
+//  http://www.github.com/feuster/HID-Button  //
+//--------------------------------------------//
 
 // define german keyboard layout
 #define kbd_de_de
