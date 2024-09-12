@@ -1,14 +1,16 @@
 //--------------------------------------------//
-//              HID-Button V1.3               //
+//              HID-Button V1.4               //
 //         (c) Alexander Feuster 2024         //
 //  http://www.github.com/feuster/HID-Button  //
 //--------------------------------------------//
 
-// define german keyboard layout
-#define kbd_de_de
+// defines
+#define kbd_de_de             // german keyboard layout
+#define use_null_keystroke    // enable compatibility function sendNullKeyStroke()
+
 // includes
-#include "DigiKeyboard.h"
-#include "Bounce2.h"
+#include "DigiKeyboard.h"     // library for emulating a HID keyboard
+#include "Bounce2.h"          // library for handling the button hardware bouncing
 
 /// --------------------------------------------------------------------------------------------
 /// login credentials pair 1 for short button press which can be changed to real credentials
@@ -24,7 +26,7 @@ const char PASSWORD2[] = "PASSWORD2";
 /// --------------------------------------------------------------------------------------------
 
 /// --------------------------------------------------------------------------------------------
-/// hardware definitions
+/// hardware & software definitions
 /// --------------------------------------------------------------------------------------------
 // input pin for pushbutton (PB0-PB4 with according wiring change, never use PB5 which is RESET)
 const int buttonPin = PB0;
@@ -38,10 +40,11 @@ Bounce2::Button button = Bounce2::Button();
 const int KEY_TAB = 43;
 
 /// --------------------------------------------------------------------------------------------
-/// start the initialization
+/// start the hardware initialization
 /// --------------------------------------------------------------------------------------------
 void setup() {
-  // wait some time before first run, to give hardware time to initialize and blink the builtin LED as start confirmation
+  // wait some time before first run, to give hardware time to initialize and blink the
+  // builtin LED as start confirmation
   for (int i = 0; i < 30; i++)
   {
     digitalWrite(LED_BUILTIN, previousLedState);
@@ -81,11 +84,9 @@ void loop() {
     // type login credentials pair 2
     Type(USER2, PASSWORD2);
   }
-  else
-  {
-    // keep alive internal update
-    DigiKeyboard.delay(25);
-  }
+
+  // keep alive USB HID communication
+  DigiKeyboard.delay(25);
 
   ///program loop ends here and will repeat now in a new cycle
 }
@@ -96,24 +97,23 @@ void loop() {
 void Type(char User[], char Password[])
 {
     // turn the builtin LED on while login is typed
+    DigiKeyboard.delay(25);
     digitalWrite(LED_BUILTIN, HIGH);
-    DigiKeyboard.delay(50);
+    DigiKeyboard.delay(25);
     
-    // type login credentials pair (remark: sendKeyStroke(0) is used as workaround for compatibility problems with older hardware and can be removed if this isn't needed)
-    DigiKeyboard.sendKeyStroke(0);
-    DigiKeyboard.delay(50);
+    // type login credentials pair
+    // remark: sendNullKeyStroke() is used as workaround for compatibility problems with older
+    //         hardware and can be disable with the use_null_keystroke if this isn't needed
+    sendNullKeyStroke();
     TypeInSingleChars(User);
     DigiKeyboard.delay(50);
-    DigiKeyboard.sendKeyStroke(0);
-    DigiKeyboard.delay(50);
+    sendNullKeyStroke();
     DigiKeyboard.sendKeyStroke(KEY_TAB);  // switches from the user input field to the password input field (should work for 99% of login masks)
     DigiKeyboard.delay(50);
-    DigiKeyboard.sendKeyStroke(0);
-    DigiKeyboard.delay(50);
+    sendNullKeyStroke();
     TypeInSingleChars(Password);
     DigiKeyboard.delay(50);
-    DigiKeyboard.sendKeyStroke(0);
-    DigiKeyboard.delay(50);
+    sendNullKeyStroke();
     DigiKeyboard.sendKeyStroke(KEY_ENTER); // confirms login input
     DigiKeyboard.delay(50);
 
@@ -128,7 +128,8 @@ void Type(char User[], char Password[])
 }
 
 /// --------------------------------------------------------------------------------------------
-/// print a longer text as singles and keep alive Keyboard with special delay (this should prevent freezing when typing longer texts)
+/// print a longer text as singles and keep alive Keyboard with special delay
+/// remark: this should prevent freezing when typing longer texts
 /// --------------------------------------------------------------------------------------------
 void TypeInSingleChars(char Text[])
 {
@@ -139,4 +140,15 @@ void TypeInSingleChars(char Text[])
     // delay should prevent freezing when typing longer texts
     DigiKeyboard.delay(10);
   }
+}
+
+/// --------------------------------------------------------------------------------------------
+/// sendNullKeyStroke is used as workaround for compatibility problems with older hardware
+/// --------------------------------------------------------------------------------------------
+void sendNullKeyStroke()
+{
+#ifdef use_null_keystroke
+    DigiKeyboard.sendKeyStroke(0);
+    DigiKeyboard.delay(50);
+#endif
 }
