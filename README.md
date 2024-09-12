@@ -17,11 +17,12 @@ The HID-Button acts as an automatic keyboard replacement which types credentials
 - Extract zip archive "DigisparkKeyboard-master-fixed.zip" to C:\Users\<YOURUSERNAME>\AppData\Local\Arduino15\libraries
 - Extract the content of _DigisparkKeyboard-master-fixed.zip_ to __C:\Users\<YOURUSERNAME>\AppData\Local\Arduino15\libraries__ before compiling
 - Before uploading the INO sketch to the board you must change in [HID-Button.ino](./HID-Button.ino) the login credentials USER|PASSWORD pairs to the desired real credentials
-- optional: if a reset is needed for your board you can connect _PB5_ with a pushbutton to _GND_
+- optional: if a hardware reset is needed for your board you can connect _PB5_ with a pushbutton to _GND_ (but recommended is to use the builtin software reboot with button press)
 
 ## Usage
 - press the button shorter than 1 second to type credentials pair 1 as login
-- press the button longer than 1 second to type credentials pair 2 as login
+- press the button between 1 and 5 seconds to type credentials pair 2 as login
+- press the button longer than 5 seconds to reboot the HID-Button
 
 ## License / Copyright
 The HID-Button is licensed under [GPL-2.0-only](./LICENSE).
