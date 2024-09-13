@@ -27,7 +27,7 @@ The HID-Button-ATTiny85 is based on the ATTiny85 board and acts as an automatic 
 - Press the button longer than 5 seconds to reboot the HID-Button
 
 ## Known Issues
-- If the HID-Button-ATTiny85 is already plugged at start of the PC or during a restart it will not properly work, this issue #1 can be solved by replugging
+- If the HID-Button-ATTiny85 is already plugged at start of the PC or during a restart it will not properly work, this [issue](https://github.com/feuster/HID-Button/issues/1) can be solved by replugging
 
 ## License / Copyright
 The HID-Button-ATTiny85 is licensed under [GPL-2.0-only](./LICENSE).
