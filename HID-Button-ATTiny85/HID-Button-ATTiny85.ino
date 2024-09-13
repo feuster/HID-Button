@@ -1,5 +1,5 @@
 //--------------------------------------------//
-//              HID-Button V1.5               //
+//              HID-Button V1.6               //
 //         (c) Alexander Feuster 2024         //
 //  http://www.github.com/feuster/HID-Button  //
 //                                            //
@@ -18,25 +18,16 @@
 // defines
 #define kbd_de_de             // german keyboard layout
 #define use_null_keystroke    // enable compatibility function sendNullKeyStroke()
-#define enable_reboot         // enabled reboot on button press
+#define enable_reboot         // enabled reboot on maximum duration button press
 
 // includes
+#include "Credentials.h"
 #include "DigiKeyboard.h"     // library for emulating a HID keyboard
 #include "Bounce2.h"          // library for handling the button hardware bouncing
 #ifdef enable_reboot
   #include <avr/wdt.h>        // AVR watchdog library
 #endif
 
-/// -----------------------------------------------------------------------------------------------------------------------
-/// login credentials pair 1 for short button press which can be changed to real credentials
-/// -----------------------------------------------------------------------------------------------------------------------
-const char USER1[] = "USER1";
-const char PASSWORD1[] = "PASSWORD1";
-/// -----------------------------------------------------------------------------------------------------------------------
-/// login credentials pair 2 for long button press which can be changed to real credentials
-/// -----------------------------------------------------------------------------------------------------------------------
-const char USER2[] = "USER2";
-const char PASSWORD2[] = "PASSWORD2";
 /// -----------------------------------------------------------------------------------------------------------------------
 /// do not change code behind this line if not needed !!!
 /// -----------------------------------------------------------------------------------------------------------------------
@@ -46,11 +37,13 @@ const char PASSWORD2[] = "PASSWORD2";
 /// -----------------------------------------------------------------------------------------------------------------------
 // input pin for pushbutton (PB0-PB4 with according wiring change, never use PB5 which is RESET)
 const int buttonPin = PB0;
+// first run
+bool firstRun = true;
 // state of the builtin LED for blinking
 int previousLedState = HIGH;
 // time to define a long button press in ms
 int longPressTimeSpan = 1000;
-// time to define a maximal button press in ms (must be longer than longPressTimeSpan)
+// time to define a maximum duration button press in ms (must be longer than longPressTimeSpan)
 int maxPressTimeSpan = 5000;
 // create a Bounce2::Button object
 Bounce2::Button button = Bounce2::Button();
@@ -60,13 +53,7 @@ const int KEY_TAB = 43;
 /// -----------------------------------------------------------------------------------------------------------------------
 /// start the hardware initialization
 /// -----------------------------------------------------------------------------------------------------------------------
-void setup() {
-  // wait some time before first run, to give hardware time to initialize and blink the builtin LED as start confirmation
-  for (int i = 0; i < 30; i++)
-  {
-    blink(100);
-  }
-
+void setup() { 
 #ifdef enable_reboot
   // disable watchdog for reboot function
   wdt_disable();
@@ -89,6 +76,16 @@ void setup() {
 /// program loop
 /// -----------------------------------------------------------------------------------------------------------------------
 void loop() {
+  // wait some time on first run, to give hardware time to initialize and blink the builtin LED as start confirmation
+  if (firstRun)
+  {
+    firstRun = false;
+    for (int i = 0; i < 20; i++)
+    {
+      blink(100);
+    }    
+  }
+
   // read the pushbutton state once per loop
   button.update();
 
@@ -121,7 +118,8 @@ void loop() {
 #endif  
 
   // keep alive USB HID communication
-  DigiKeyboard.delay(25);
+  DigiKeyboard.delay(20);
+  delay(5);
 
   ///program loop ends here and will repeat now in a new cycle
 }
@@ -136,21 +134,20 @@ void Type(char User[], char Password[])
     digitalWrite(LED_BUILTIN, HIGH);
     DigiKeyboard.delay(25);
     
-    // type login credentials pair
+    // type login credentials pair or only the password if user is left empty in the credentials
     // remark: sendNullKeyStroke() is used as workaround for compatibility problems with older hardware
     //         and can be disabled with the use_null_keystroke define if this isn't needed
-    sendNullKeyStroke();
-    TypeInSingleChars(User);
-    DigiKeyboard.delay(50);
-    sendNullKeyStroke();
-    DigiKeyboard.sendKeyStroke(KEY_TAB);  // switches from the user input field to the password input field (should work for 99% of login masks)
-    DigiKeyboard.delay(50);
+    if (User[0] != 0)
+    {
+      sendNullKeyStroke();
+      TypeInSingleChars(User);
+      sendNullKeyStroke();
+      sendKeyStroke(KEY_TAB);   // switches from the user input field to the password input field (should work for 99% of login masks)
+    }
     sendNullKeyStroke();
     TypeInSingleChars(Password);
-    DigiKeyboard.delay(50);
     sendNullKeyStroke();
-    DigiKeyboard.sendKeyStroke(KEY_ENTER); // confirms login input
-    DigiKeyboard.delay(50);
+    sendKeyStroke(KEY_ENTER); // confirms login input
 
     // clear potential write error
     if (DigiKeyboard.getWriteError() != 0)
@@ -189,9 +186,18 @@ void sendNullKeyStroke()
 }
 
 /// -----------------------------------------------------------------------------------------------------------------------
+/// sendKeyStroke is used as wrapper to add a keep alive delay
+/// -----------------------------------------------------------------------------------------------------------------------
+void sendKeyStroke(byte keyStroke)
+{
+    DigiKeyboard.sendKeyStroke(keyStroke);
+    DigiKeyboard.delay(50);
+}
+
+/// -----------------------------------------------------------------------------------------------------------------------
 /// blink builtin LED
 /// -----------------------------------------------------------------------------------------------------------------------
-void blink (long milli)
+void blink(long milli)
 {
     digitalWrite(LED_BUILTIN, previousLedState);
     previousLedState = !previousLedState;

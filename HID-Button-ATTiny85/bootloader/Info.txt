@@ -1,0 +1,8 @@
+Micronucleus source:
+micronucleus-cli-master-882e7b4a-x86_64-MINGW64_NT-10.0-17763
+https://github.com/micronucleus/micronucleus/releases/
+
+Bootloader upgrade source:
+micronucleus-1.11.hex
+upgrade-t85_default.hex
+https://github.com/ArminJo/micronucleus-firmware
