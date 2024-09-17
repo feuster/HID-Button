@@ -10,7 +10,7 @@ The HID-Button-Micro is based on the Arduino Micro board and acts as an automati
 - Wiring:<br> ![Wiring](./docs/Wiring.png)
 
 ## Manual / Remarks
-- It is recommended to usb a programmer to upload the sketch like the USBtinyISP or similiar
+- It is recommended to use a programmer to upload the sketch like the USBtinyISP or similiar
 - Choose Board and Arduino IDE Settings as shown here (__optional:__ choose different programming or upload method):<br> ![Arduino IDE Settings](./docs/Arduino_IDE_Settings.png)
 - Install the _Keyboard_ library via the Arduino IDE library manager:<br> ![Arduino IDE Settings](./docs/Arduino_Keyboard_Library.png)
 - Before uploading the INO sketch to the board you must change in [Credentials.h](./Credentials.h) the login credentials USER|PASSWORD pairs to the desired real credentials
