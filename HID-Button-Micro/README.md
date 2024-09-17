@@ -15,14 +15,18 @@ The HID-Button-Micro is based on the Arduino Micro board and acts as an automati
 - Install the _Keyboard_ library via the Arduino IDE library manager:<br> ![Arduino IDE Settings](./docs/Arduino_Keyboard_Library.png)
 - Before uploading the INO sketch to the board you must change in [Credentials.h](./Credentials.h) the login credentials USER|PASSWORD pairs to the desired real credentials
 - If only a password input is needed leave the according USER value in [Credentials.h](./Credentials.h) empty
-- __Optional:__ if a 3rd USER|PASSWORD pair credential is needed the reboot function can be disabled by commenting out the according define in exchange to enable this
+- __Optional:__ if a 3rd USER|PASSWORD pair credential is needed the reboot function can be disabled by commenting out `#define enable_reboot` in exchange to enable this. The wiring from pin _A1_ to pin _RESET_ is also not needed in this configuration.
 
 ## Usage
+### Depending if the reboot is enabled or not there are 2 usage schemes:
+#### Default configuration with reboot enabled:
 - Press the button shorter than 1 second to type credentials pair 1 as login
-- Press the button between 1 and 5 seconds to type credentials pair 2 as login  (default configuration)
-- Press the button between 1 and 3 seconds to type credentials pair 2 as login  (alternative configuration)
-- Press the button longer than 5 seconds to reboot the HID-Button               (default configuration)
-- Press the button longer than 3 seconds to type credentials pair 3 as login    (alternative configuration)
+- Press the button between 1 and 5 seconds to type credentials pair 2 as login
+- Press the button longer than 5 seconds to reboot the HID-Button
+#### Alternative configuration with reboot disabled:
+- Press the button shorter than 1 second to type credentials pair 1 as login
+- Press the button between 1 and 3 seconds to type credentials pair 2 as login
+- Press the button longer than 3 seconds to type credentials pair 3 as login
 
 ## Known Issues
 - none (as of date 09/2024)
