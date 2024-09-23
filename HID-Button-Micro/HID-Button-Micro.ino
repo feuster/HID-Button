@@ -1,5 +1,5 @@
 //--------------------------------------------//
-//           HID-Button-Micro V1.0            //
+//           HID-Button-Micro V1.1            //
 //         (c) Alexander Feuster 2024         //
 //  http://www.github.com/feuster/HID-Button  //
 //                                            //
@@ -18,6 +18,7 @@
 // defines
 #define enable_reboot         // enabled reboot on maximum duration button press else credential pair 3 is typed
 #define enable_german_layout  // define german keyboard layout, if disabled US keyboard layout will be used
+//#define enable_pin_mode       // password will not be typed with a finalizing RETURN, used for e.g. for PIN inputs which auto-accept a fixed count of digits
 
 // includes
 #include "Credentials.h"      // header file with stored USER|PASSWORD credentials
@@ -165,7 +166,10 @@ void Type(char User[], char Password[])
       sendKeyStroke(KEY_TAB);   // switches from the user input field to the password input field (should work for 99% of login masks)
     }
     TypeInSingleChars(Password);
-    sendKeyStroke(KEY_RETURN);  // confirms login input
+    
+    #ifndef enable_pin_mode
+    sendKeyStroke(KEY_RETURN);  // confirms login input witha RETURN (will not be send if PIN mode is active)
+    #endif
 
     // clear potential write error
     if (Keyboard.getWriteError() != 0)

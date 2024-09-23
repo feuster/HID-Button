@@ -16,6 +16,7 @@ The HID-Button-Micro is based on the Arduino Micro board and acts as an automati
 - Before uploading the INO sketch to the board you must change in [Credentials.h](./Credentials.h) the login credentials USER|PASSWORD pairs to the desired real credentials
 - If only a password input is needed leave the according USER value in [Credentials.h](./Credentials.h) empty
 - __Optional:__ if a 3rd USER|PASSWORD pair credential is needed the reboot function can be disabled by commenting out `#define enable_reboot` in exchange to enable this. The wiring from pin _A1_ to pin _RESET_ is also not needed in this configuration.
+- __Optional:__ as default every password is typed with a RETURN. This behaviour can be disabled by uncommenting `//#define enable_pin_mode` which changes the behaviour not to send a final RETURN as it is needed for PIN inputs or similiar since those type of query auto-accept inputs by a fixed digit length.
 
 ## Usage
 ### Depending if the reboot is enabled or not there are 2 usage schemes:
