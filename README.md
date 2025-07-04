@@ -2,7 +2,7 @@
 
 ## Introduction
 The HID-Button acts as an automatic keyboard replacement which types credentials into a Windows (or similiar) login request with just a single button press.
-There are different versions of the HID-Button available depending on which Arduino or compatible board is inteded to be used.
+There are different versions of the HID-Button available depending on which Arduino or compatible board is intended to be used.
 
 ## Versions
 - [HID-Button-ATTiny85](./HID-Button-ATTiny85/README.md) based on the ATTiny85 board
